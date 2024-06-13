@@ -16,6 +16,27 @@ const encryptPass = async (password) => {
 
 mongoose.connect("mongodb+srv://joesheran:jjs2002j@cluster0.yf75nyn.mongodb.net/blogDB?retryWrites=true&w=majority&appName=Cluster0")
 
+app.post("/view",(request,response) => {
+    let token = request.headers["token"]
+    jwt.verify(token,"blog-app",(error,decoded)=>{
+        if (error) {
+            response.json({"status":"Unauthorised Access"})
+        } else {
+            if(decoded)
+                {
+                    blogmodel.find().then(
+                        (data) => {
+                            response.json(data)
+                        }
+                    ).catch()
+                }
+                }
+            
+    })
+   
+})
+
+
 app.post("/signIn", (request, response) => {
     let input = request.body
     blogmodel.find({ "email": request.body.email }).then(
